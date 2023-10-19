@@ -3,20 +3,22 @@
 class HealthSystem
 {
     // create health variables
-    
+
     private int maxHealth = 100;
     private int currentHealth;
+    private int lives = 3;
 
-    
-    
+
     public HealthSystem(int maxHealth)
     {
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
+        
     }
 
-   
+
     // take damage method 
+    
     public void TakeDamage(int damageAmount)
     {
         currentHealth -= damageAmount;
@@ -57,7 +59,7 @@ class ShieldSystem
 {
     // shield variables created
     
-    private int maxShield = 50;
+    private int maxShield = 100;
     private int currentShield;
 
     public ShieldSystem(int maxShield)
@@ -91,6 +93,11 @@ class ShieldSystem
 
     public int GetCurrentShield()
     {
+        if (maxShield > 100)
+        {
+            Console.WriteLine("You cannout exceed 100 shield!");
+        }
+        
         return currentShield;
     }
 
@@ -102,21 +109,21 @@ class ShieldSystem
 
 class ExpSystem
 {
-    private int experience;
+    private int xp;
     private int level;
 
     public ExpSystem()
     {
-        experience = 0;
+        xp = 0;
         level = 1;
     }
 
-    public void GainExperience(int expAmount)
+    public void IncreaseXP(int expAmount)
     {
-        experience += expAmount;
-        while (experience >= GetExperienceRequiredForNextLevel())
+        xp += expAmount;
+        while (xp >= GetExperienceRequiredForNextLevel())
         {
-            experience -= GetExperienceRequiredForNextLevel();
+            xp -= GetExperienceRequiredForNextLevel();
             level++;
         }
     }
@@ -128,7 +135,7 @@ class ExpSystem
 
     public int GetCurrentExperience()
     {
-        return experience;
+        return xp;
     }
 
     public int GetExperienceRequiredForNextLevel()
@@ -141,13 +148,15 @@ class Player
 {
     private HealthSystem health;
     private ShieldSystem shield;
-    private ExpSystem exp;
+    private ExpSystem xp;
+    private int lives
 
-    public Player(int maxHealth, int maxShield)
+    public Player(int maxHealth, int maxShield, int startingLives)
     {
         health = new HealthSystem(maxHealth);
         shield = new ShieldSystem(maxShield);
-        exp = new ExpSystem();
+        xp = new ExpSystem();
+        lives = startingLives;
     }
 
     public void TakeDamage(int damageAmount)
@@ -181,18 +190,37 @@ class Player
         shield.Recharge(rechargeAmount);
     }
 
+
+
     public void GainExperience(int expAmount)
     {
-        exp.GainExperience(expAmount);
+        xp.IncreaseXP(expAmount);
+    }
+
+
+    public void Revive()
+    {
+        if (lives > 0)
+        {
+            lives--;
+            health.Heal(health.GetMaxHealth());
+            shield.Recharge(shield.GetMaxShield());
+        }
+    }
+
+    public int GetLives()
+    {
+        return lives;
     }
 
     public void ShowHUD()
     {
         Console.WriteLine("Player Status:");
-        Console.WriteLine("Health: " + health.GetCurrentHealth());
-        Console.WriteLine("Shield: " + shield.GetCurrentShield());
-        Console.WriteLine("Level:" + exp.GetCurrentLevel());
-        Console.WriteLine("Experience: " + exp.GetCurrentExperience() + " / " + exp.GetExperienceRequiredForNextLevel());
+        Console.WriteLine("Lives Remaining: " + lives);
+        Console.WriteLine("Health: " + health.GetCurrentHealth() + " / " + health.GetMaxHealth());
+        Console.WriteLine("Shield: " + shield.GetCurrentShield() + " / " + shield.GetMaxShield());
+        Console.WriteLine("Level:" + xp.GetCurrentLevel());
+        Console.WriteLine("Experience: " + xp.GetCurrentExperience() + " / " + xp.GetExperienceRequiredForNextLevel());
         Console.WriteLine();
     }
 }
@@ -207,7 +235,7 @@ class Program
         Console.WriteLine();
 
 
-        Player player = new Player(100, 50);
+        Player player = new Player(100, 100, 3);
 
         player.ShowHUD();
 
@@ -234,9 +262,14 @@ class Program
         player.ShowHUD();
 
 
-        Console.WriteLine("You drink a potion and heal 25 hp");
-        player.Heal(25);
+        Console.WriteLine("You drink a potion and heal 10 hp");
+        player.Heal(10);
         player.ShowHUD();
+        
+        Console.WriteLine("You take a rest and regenerate your shield") ;
+        player.RechargeShield(100);
+        player.ShowHUD();
+
         Console.ReadKey();
     }
 }
