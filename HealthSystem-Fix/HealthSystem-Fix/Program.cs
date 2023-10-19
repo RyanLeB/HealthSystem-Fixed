@@ -2,15 +2,21 @@
 
 class HealthSystem
 {
-    private int maxHealth;
+    // create health variables
+    
+    private int maxHealth = 100;
     private int currentHealth;
 
+    
+    
     public HealthSystem(int maxHealth)
     {
         this.maxHealth = maxHealth;
         this.currentHealth = maxHealth;
     }
 
+   
+    // take damage method 
     public void TakeDamage(int damageAmount)
     {
         currentHealth -= damageAmount;
@@ -18,8 +24,13 @@ class HealthSystem
         {
             currentHealth = 0;
         }
+        if (damageAmount < 0)
+        {
+            Console.WriteLine("Cannot take negative damage!");
+        }
     }
 
+    // healing method
     public void Heal(int healAmount)
     {
         currentHealth += healAmount;
@@ -28,7 +39,9 @@ class HealthSystem
             currentHealth = maxHealth;
         }
     }
+    
 
+    // methods to get current and maximum health available
     public int GetCurrentHealth()
     {
         return currentHealth;
@@ -42,7 +55,9 @@ class HealthSystem
 
 class ShieldSystem
 {
-    private int maxShield;
+    // shield variables created
+    
+    private int maxShield = 50;
     private int currentShield;
 
     public ShieldSystem(int maxShield)
@@ -57,6 +72,11 @@ class ShieldSystem
         if (currentShield < 0)
         {
             currentShield = 0;
+        }
+
+        if (damageAmount < 0)
+        {
+            Console.WriteLine("Cannot take negative damage!");
         }
     }
 
@@ -166,7 +186,7 @@ class Player
         exp.GainExperience(expAmount);
     }
 
-    public void DisplayStatus()
+    public void ShowHUD()
     {
         Console.WriteLine("Player Status:");
         Console.WriteLine("Health: " + health.GetCurrentHealth());
@@ -189,22 +209,34 @@ class Program
 
         Player player = new Player(100, 50);
 
-        player.DisplayStatus();
+        player.ShowHUD();
 
         Console.WriteLine("You take 30 damage!");
         Console.WriteLine();
 
         player.TakeDamage(30);
-        player.DisplayStatus();
+        player.ShowHUD();
 
+
+        Console.WriteLine("You've activated a buff which regenerates 20 shield!");
         player.RechargeShield(20);
-        player.DisplayStatus();
+        player.ShowHUD();
 
+        Console.WriteLine("You take 100 damage!");
+        player.TakeDamage(100);
+        player.ShowHUD();
+
+
+        Console.WriteLine("You defeat the monster and gain 150 experience!") ;
+        Console.WriteLine();
+        Console.WriteLine("You leveled up! You are now level 2!");
         player.GainExperience(150);
-        player.DisplayStatus();
+        player.ShowHUD();
 
+
+        Console.WriteLine("You drink a potion and heal 25 hp");
         player.Heal(25);
-        player.DisplayStatus();
+        player.ShowHUD();
         Console.ReadKey();
     }
 }
