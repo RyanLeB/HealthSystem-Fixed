@@ -30,11 +30,11 @@ class Player
 
     // take damage method
 
-    public void TakeDamage(int damageAmount)
+    public void TakeDamage(int damage)
     {
         if (shield > 0)
         {
-            int remainingDamage = damageAmount - shield;
+            int remainingDamage = damage - shield;
             if (remainingDamage > 0)
             {
                 shield = 0;
@@ -42,12 +42,12 @@ class Player
             }
             else
             {
-                shield -= damageAmount;
+                shield -= damage;
             }
         }
         else
         {
-            health -= damageAmount;
+            health -= damage;
         }
         if (health < 0)
         {
