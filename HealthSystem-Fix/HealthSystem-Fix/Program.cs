@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Diagnostics;
 
 class Player
 {
@@ -8,7 +8,7 @@ class Player
     private int maxHealth = 100;
     private int health;
     private int maxShield = 100;
-    private int shield;
+    private int currentShield;
     private int xp;
     private int level;
     private int lives;
@@ -21,7 +21,7 @@ class Player
         this.maxHealth = maxHealth;
         this.health = maxHealth;
         this.maxShield = maxShield;
-        this.shield = maxShield;
+        this.currentShield = maxShield;
         this.xp = 0;
         this.level = 1;
         this.lives = startingLives;
@@ -32,17 +32,24 @@ class Player
 
     public void TakeDamage(int damage)
     {
-        if (shield > 0)
+        if (damage < 0)
+            
+            damage = 0;
+            
+        
+        
+        
+        if (currentShield > 0)
         {
-            int remainingDamage = damage - shield;
+            int remainingDamage = damage - currentShield;
             if (remainingDamage > 0)
             {
-                shield = 0;
+                currentShield = 0;
                 health -= remainingDamage;
             }
             else
             {
-                shield -= damage;
+                currentShield -= damage;
             }
         }
         else
@@ -55,7 +62,7 @@ class Player
             {
                 lives--;
                 health = maxHealth;
-                shield = maxShield;
+                currentShield = maxShield;
             }
             else
             {
@@ -70,6 +77,12 @@ class Player
     // healing and shield recharge method
     public void Heal(int healAmount)
     {
+        if (healAmount < 0)
+            
+            healAmount = 0;
+        
+        
+        
         health += healAmount;
         if (health > maxHealth)
         {
@@ -80,11 +93,15 @@ class Player
 
     public void RechargeShield(int rechargeAmount)
     {
-        shield += rechargeAmount;
-        if (shield > maxShield)
+        if (rechargeAmount < 0)
+            
+            rechargeAmount = 0;
+        
+        currentShield += rechargeAmount;
+        if (currentShield > maxShield)
         { 
             
-            shield = maxShield;
+            currentShield = maxShield;
         }
     }
     
@@ -92,7 +109,7 @@ class Player
     
     public int GetCurrentShield()
     {
-        return shield;
+        return currentShield;
        
     }
     public int GetMaxShield()
@@ -115,12 +132,10 @@ class Player
     public void IncreaseXP(int expAmount)
     {
         if (expAmount < 0)
-        {
-            Console.WriteLine();
-            Console.WriteLine("Warning! cannot receive negative XP!, number has been changed to a positive value.");
-            Console.WriteLine();
-            expAmount *= -1;
-        }
+            
+            expAmount = 0;
+            
+        
         
         
         xp += expAmount;
@@ -229,7 +244,7 @@ class Player
     }
 
 
-
+    
 
 
 }
@@ -239,8 +254,18 @@ class Player
 
 class Program
 {
+    
+    
+    
+    
+    
     static void Main(string[] args)
     {
+
+       
+
+
+
         Console.WriteLine("Welcome to a health system simulator!");
         Console.WriteLine();
         Console.WriteLine("Made by RyanDot Games");
