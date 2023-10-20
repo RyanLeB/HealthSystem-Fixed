@@ -37,7 +37,7 @@ namespace HealthSystem
             health = 100;
             shield = 100;
             level = 1;
-
+            lives = 3;
 
 
 
