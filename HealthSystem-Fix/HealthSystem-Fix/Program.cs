@@ -6,7 +6,7 @@ class HealthSystem
 
     private int maxHealth = 100;
     private int currentHealth;
-    private int lives = 3;
+
 
 
     public HealthSystem(int maxHealth)
@@ -29,8 +29,18 @@ class HealthSystem
         if (damageAmount < 0)
         {
             Console.WriteLine("Cannot take negative damage!");
+            Console.WriteLine();
         }
+
+        
     }
+
+   
+
+
+
+
+
 
     // healing method
     public void Heal(int healAmount)
@@ -40,13 +50,52 @@ class HealthSystem
         {
             currentHealth = maxHealth;
         }
+        
     }
     
 
     // methods to get current and maximum health available
     public int GetCurrentHealth()
     {
+
+        if (currentHealth == 100)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are in perfect health!");
+            
+
+        }
+        if (currentHealth <= 90)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are Healthy!");
+            
+        }
+
+        if (currentHealth <= 75)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are Hurt!");
+            
+        }
+
+        if (currentHealth <= 50)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are badly Hurt! Seek healing!");
+            
+        }
+
+        if (currentHealth <= 10)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are in Imminent Danger!!! Find Assistance!");
+            
+
+        }
+        
         return currentHealth;
+
     }
 
     public int GetMaxHealth()
@@ -79,6 +128,7 @@ class ShieldSystem
         if (damageAmount < 0)
         {
             Console.WriteLine("Cannot take negative damage!");
+            Console.WriteLine();
         }
     }
 
@@ -149,7 +199,9 @@ class Player
     private HealthSystem health;
     private ShieldSystem shield;
     private ExpSystem xp;
-    private int lives
+    private int lives;
+    
+
 
     public Player(int maxHealth, int maxShield, int startingLives)
     {
@@ -185,6 +237,7 @@ class Player
         health.Heal(healAmount);
     }
 
+    
     public void RechargeShield(int rechargeAmount)
     {
         shield.Recharge(rechargeAmount);
@@ -213,6 +266,8 @@ class Player
         return lives;
     }
 
+   
+
     public void ShowHUD()
     {
         Console.WriteLine("Player Status:");
@@ -231,6 +286,7 @@ class Program
     {
         Console.WriteLine("Welcome to a health system simulator!");
         Console.WriteLine();
+        Console.WriteLine("Made by RyanDot Games");
         Console.WriteLine();
         Console.WriteLine();
 
@@ -238,6 +294,7 @@ class Program
         Player player = new Player(100, 100, 3);
 
         player.ShowHUD();
+        
 
         Console.WriteLine("You take 30 damage!");
         Console.WriteLine();
@@ -247,10 +304,12 @@ class Program
 
 
         Console.WriteLine("You've activated a buff which regenerates 20 shield!");
+        Console.WriteLine();   
         player.RechargeShield(20);
         player.ShowHUD();
 
         Console.WriteLine("You take 100 damage!");
+        Console.WriteLine();   
         player.TakeDamage(100);
         player.ShowHUD();
 
@@ -270,6 +329,29 @@ class Program
         player.RechargeShield(100);
         player.ShowHUD();
 
+        Console.WriteLine("You encounter another monster!");
+        Console.WriteLine();
+        player.ShowHUD();
+
+        Console.WriteLine("You take 200 damage!");
+        player.TakeDamage(200);
+        player.ShowHUD();
+
+        Console.WriteLine("You have died, you will revive in a safe location");
+        player.Revive();
+        Console.WriteLine();
+        player.ShowHUD();
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         Console.ReadKey();
     }
 }
