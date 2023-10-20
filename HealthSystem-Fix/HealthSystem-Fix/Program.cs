@@ -1,181 +1,207 @@
 ﻿using System;
 
-class HealthSystem
+
+class Player
 {
-    // create health variables
+    // creating variables
 
     private int maxHealth = 100;
-    private int currentHealth;
+    private int health;
+    private int maxShield = 100;
+    private int shield;
+    private int xp;
+    private int level;
+    private int lives;
 
-
-
-    public HealthSystem(int maxHealth)
+    
+    // defining player
+    
+    public Player(int maxHealth, int maxShield, int startingLives)
     {
         this.maxHealth = maxHealth;
-        this.currentHealth = maxHealth;
-        
+        this.health = maxHealth;
+        this.maxShield = maxShield;
+        this.shield = maxShield;
+        this.xp = 0;
+        this.level = 1;
+        this.lives = startingLives;
     }
 
 
-    // take damage method 
-    
+    // take damage method
+
     public void TakeDamage(int damageAmount)
     {
-        currentHealth -= damageAmount;
-        if (currentHealth < 0)
+        if (shield > 0)
         {
-            currentHealth = 0;
+            int remainingDamage = damageAmount - shield;
+            if (remainingDamage > 0)
+            {
+                shield = 0;
+                health -= remainingDamage;
+            }
+            else
+            {
+                shield -= damageAmount;
+            }
         }
-        if (damageAmount < 0)
+        else
         {
-            Console.WriteLine("Cannot take negative damage!");
-            Console.WriteLine();
+            health -= damageAmount;
         }
-
-        
+        if (health < 0)
+        {
+            if (lives > 0)
+            {
+                lives--;
+                health = maxHealth;
+                shield = maxShield;
+            }
+            else
+            {
+                health = 0;
+            }
+        }
     }
 
-   
 
 
 
-
-
-
-    // healing method
+    // healing and shield recharge method
     public void Heal(int healAmount)
     {
-        currentHealth += healAmount;
-        if (currentHealth > maxHealth)
+        health += healAmount;
+        if (health > maxHealth)
         {
-            currentHealth = maxHealth;
+            health = maxHealth;
         }
         
     }
+
+    public void RechargeShield(int rechargeAmount)
+    {
+        shield += rechargeAmount;
+        if (shield > maxShield)
+        { 
+            
+            shield = maxShield;
+        }
+    }
     
-
-    // methods to get current and maximum health available
-    public int GetCurrentHealth()
-    {
-
-        if (currentHealth == 100)
-        {
-            Console.WriteLine();
-            Console.WriteLine("You are in perfect health!");
-            
-
-        }
-        if (currentHealth <= 90)
-        {
-            Console.WriteLine();
-            Console.WriteLine("You are Healthy!");
-            
-        }
-
-        if (currentHealth <= 75)
-        {
-            Console.WriteLine();
-            Console.WriteLine("You are Hurt!");
-            
-        }
-
-        if (currentHealth <= 50)
-        {
-            Console.WriteLine();
-            Console.WriteLine("You are badly Hurt! Seek healing!");
-            
-        }
-
-        if (currentHealth <= 10)
-        {
-            Console.WriteLine();
-            Console.WriteLine("You are in Imminent Danger!!! Find Assistance!");
-            
-
-        }
-        
-        return currentHealth;
-
-    }
-
-    public int GetMaxHealth()
-    {
-        return maxHealth;
-    }
-}
-
-class ShieldSystem
-{
-    // shield variables created
+    // "Get" methods
     
-    private int maxShield = 100;
-    private int currentShield;
-
-    public ShieldSystem(int maxShield)
-    {
-        this.maxShield = maxShield;
-        this.currentShield = maxShield;
-    }
-
-    public void TakeDamage(int damageAmount)
-    {
-        currentShield -= damageAmount;
-        if (currentShield < 0)
-        {
-            currentShield = 0;
-        }
-
-        if (damageAmount < 0)
-        {
-            Console.WriteLine("Cannot take negative damage!");
-            Console.WriteLine();
-        }
-    }
-
-    public void Recharge(int rechargeAmount)
-    {
-        currentShield += rechargeAmount;
-        if (currentShield > maxShield)
-        {
-            currentShield = maxShield;
-        }
-    }
-
     public int GetCurrentShield()
+    {
+        return shield;
+       
+    }
+    public int GetMaxShield()
     {
         if (maxShield > 100)
         {
-            Console.WriteLine("You cannout exceed 100 shield!");
+            Console.WriteLine("You cannot exceed 100 shield!");
+            maxShield = 100;
         }
-        
-        return currentShield;
-    }
-
-    public int GetMaxShield()
-    {
         return maxShield;
     }
-}
-
-class ExpSystem
-{
-    private int xp;
-    private int level;
-
-    public ExpSystem()
+    public int GetExperienceRequiredForNextLevel()
     {
-        xp = 0;
-        level = 1;
+        return level * 100;
     }
-
+   
+    
+    // Increase XP method
+    
     public void IncreaseXP(int expAmount)
     {
+        if (expAmount < 0)
+        {
+            Console.WriteLine();
+            Console.WriteLine("Warning! cannot receive negative XP!, number has been changed to a positive value.");
+            Console.WriteLine();
+            expAmount *= -1;
+        }
+        
+        
         xp += expAmount;
+        
         while (xp >= GetExperienceRequiredForNextLevel())
         {
             xp -= GetExperienceRequiredForNextLevel();
             level++;
         }
+
+
+
+    }
+
+    // methods to get current and maximum health available
+    public int GetCurrentHealth()
+    {
+
+        if (health == 100)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are in perfect health!");
+            Console.WriteLine();
+
+        }
+        if (health <= 90)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are Healthy!");
+            Console.WriteLine();
+        }
+
+        if (health <= 75)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are Hurt!");
+            Console.WriteLine();
+        }
+
+        if (health <= 50)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are badly Hurt! Seek healing!");
+            Console.WriteLine();
+        }
+
+        if (health <= 10)
+        {
+            Console.WriteLine();
+            Console.WriteLine("You are in Imminent Danger!!! Find Assistance!");
+            Console.WriteLine();
+
+        }
+        
+        return health;
+
+    }
+
+    // Get methods
+
+    public int GetMaxHealth()
+    {
+        if (maxHealth > 100)
+        {
+            Console.WriteLine("You cannot exceed 100 HP!");
+            maxHealth = 100;
+        }
+        return maxHealth;
+    }
+    public void Revive()
+    {
+        if (lives > 0)
+        {
+            lives--;
+            Heal(GetMaxHealth());
+            RechargeShield(GetMaxShield());
+        }
+    }
+    public int GetLives()
+    {
+        return lives;
     }
 
     public int GetCurrentLevel()
@@ -188,97 +214,28 @@ class ExpSystem
         return xp;
     }
 
-    public int GetExperienceRequiredForNextLevel()
-    {
-        return level * 100;
-    }
-}
-
-class Player
-{
-    private HealthSystem health;
-    private ShieldSystem shield;
-    private ExpSystem xp;
-    private int lives;
     
-
-
-    public Player(int maxHealth, int maxShield, int startingLives)
-    {
-        health = new HealthSystem(maxHealth);
-        shield = new ShieldSystem(maxShield);
-        xp = new ExpSystem();
-        lives = startingLives;
-    }
-
-    public void TakeDamage(int damageAmount)
-    {
-        if (shield.GetCurrentShield() > 0)
-        {
-            int remainingDamage = damageAmount - shield.GetCurrentShield();
-            if (remainingDamage > 0)
-            {
-                shield.TakeDamage(shield.GetCurrentShield());
-                health.TakeDamage(remainingDamage);
-            }
-            else
-            {
-                shield.TakeDamage(damageAmount);
-            }
-        }
-        else
-        {
-            health.TakeDamage(damageAmount);
-        }
-    }
-
-    public void Heal(int healAmount)
-    {
-        health.Heal(healAmount);
-    }
-
+    // ShowHUD method to display in console
     
-    public void RechargeShield(int rechargeAmount)
-    {
-        shield.Recharge(rechargeAmount);
-    }
-
-
-
-    public void GainExperience(int expAmount)
-    {
-        xp.IncreaseXP(expAmount);
-    }
-
-
-    public void Revive()
-    {
-        if (lives > 0)
-        {
-            lives--;
-            health.Heal(health.GetMaxHealth());
-            shield.Recharge(shield.GetMaxShield());
-        }
-    }
-
-    public int GetLives()
-    {
-        return lives;
-    }
-
-   
-
     public void ShowHUD()
     {
         Console.WriteLine("Player Status:");
         Console.WriteLine("Lives Remaining: " + lives);
-        Console.WriteLine("Health: " + health.GetCurrentHealth() + " / " + health.GetMaxHealth());
-        Console.WriteLine("Shield: " + shield.GetCurrentShield() + " / " + shield.GetMaxShield());
-        Console.WriteLine("Level:" + xp.GetCurrentLevel());
-        Console.WriteLine("Experience: " + xp.GetCurrentExperience() + " / " + xp.GetExperienceRequiredForNextLevel());
+        Console.WriteLine("Health: " + GetCurrentHealth() + " / " + GetMaxHealth());
+        Console.WriteLine("Shield: " + GetCurrentShield() + " / " + GetMaxShield());
+        Console.WriteLine("Level:" + GetCurrentLevel());
+        Console.WriteLine("Experience: " + GetCurrentExperience() + " / " + GetExperienceRequiredForNextLevel());
         Console.WriteLine();
     }
+
+
+
+
+
 }
+
+
+// Main 
 
 class Program
 {
@@ -317,7 +274,7 @@ class Program
         Console.WriteLine("You defeat the monster and gain 150 experience!") ;
         Console.WriteLine();
         Console.WriteLine("You leveled up! You are now level 2!");
-        player.GainExperience(150);
+        player.IncreaseXP(-150);
         player.ShowHUD();
 
 
@@ -355,3 +312,44 @@ class Program
         Console.ReadKey();
     }
 }
+    
+    
+
+    
+
+    
+
+
+
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+    
+
+    
+
+    
+    
+
+
+
+    
+
+
+
+
+   
+
+
+
